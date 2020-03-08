@@ -1,0 +1,147 @@
+body {
+	font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    font-size: 20px;
+
+}
+
+#web {
+	height: calc(100vh - 16px);
+	display: grid;
+	grid-template-rows: 60px auto;
+}
+
+#top {
+	margin: 0px 50px;
+	border-bottom: 2px solid rgb(134, 133, 51);
+}
+#center {
+	display: grid;
+
+	grid-template-columns: auto 150px;
+
+	padding: 0;
+	margin: 0px 50px;
+
+	background-color: #fafafa;
+
+	overflow: hidden;
+}
+
+#top > * {
+	text-align: center;
+	cursor: pointer;
+}
+
+#left {
+	padding: 0px 10px;
+	overflow: hidden;
+}
+
+#add {
+	margin-top: 10px;
+	display: grid;
+	grid-template-columns: 100px auto;
+}
+#add_btn {
+	height: 28px;
+	margin: 1px 0px;
+	text-align: center;
+	border: 1px solid rgb(134, 133, 51);
+}
+#add_btn:hover {
+	cursor: pointer;
+	background-color: grey;
+	color: white;
+}
+#add_txt {
+    font-size: 18px;
+    padding: 0px 4px;
+	cursor: text;
+	height: 30px;
+	margin: 1px 4px;
+	border: 1px solid rgb(134, 133, 51);
+}
+
+#data {
+	margin-top: 7px;
+	overflow-y: scroll;
+	height: calc(100% - 40px);
+}
+
+.data_obj {
+	cursor: pointer;
+
+	display: grid;
+	grid-template-columns: 25px 70px auto;
+
+	padding: 8px 5px 8px 0px;
+	margin: 0px 10px -1px 0px;
+
+	text-align: center;
+
+	animation: borderDeVisualise 0.1s;
+	border-width: 1px 0px;
+	border-style: solid;
+	border-color: transparent;
+}
+
+.data_obj:hover {
+	animation: borderVisualise 0.05s,  data_obj_load 1s;
+	border-color: rgb(218, 218, 218);
+}
+.data_obj > .textline {
+    hyphens: auto;
+
+}
+.data_obj > p {
+    margin: 0px;
+    padding: 2px 0px;
+}
+.data_obj > .delete {
+    background-color: rgb(255, 110, 110);
+    color:white;
+    text-align: center;
+}
+
+
+
+@keyframes borderVisualise {
+	from {
+		border-color: transparent;
+	}
+	to {
+		border-color: rgb(218, 218, 218);
+	}
+}
+@keyframes borderDeVisualise {
+	from {
+		border-color: rgb(218, 218, 218);
+	}
+	to {
+		border-color: transparent;
+	}
+}
+@keyframes data_obj_load {
+    0% {
+        background-color: #ececec;
+    }
+    50% {
+        background-color: #f8f8f8;
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+#right {
+	border-left: 2px solid rgb(134, 133, 51);
+}
+
+#userdetails {
+	display: grid;
+	grid-template-columns: 70px auto;
+}
+#userdetails > * {
+	margin: 0;
+	padding: 0px 5px;
+}

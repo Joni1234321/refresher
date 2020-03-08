@@ -1,0 +1,222 @@
+<html>
+	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+		<meta content="utf-8" http-equiv="encoding" />
+		<link rel="stylesheet" href="general.css" />
+		<!--		<script
+			src="https://code.jquery.com/jquery-3.4.1.min.js"
+			integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			crossorigin="anonymous"
+		></script>
+	-->
+		<script src="jquery/jquery.js"></script>
+		<script type="text/javascript">
+			// When the button is clicked
+			$(document).ready(function() {
+				load_textlines();
+				$("#add_btn").click(function() {
+					add_textline();
+				});
+				$("#top").click(function() {
+					load_textlines();
+				});
+			});
+
+			// When a button is pressed
+			$(document).on("keydown", function(event) {
+				var keycode = event.keyCode ? event.keyCode : event.which;
+
+				if (keycode == 13) {
+					add_textline();
+				}
+
+				//Stop the event from propogation to other handlers
+				//If this line will be removed, then keypress event handler attached
+				//at document level will also be triggered
+				event.stopPropagation();
+			});
+
+			$(document).on("click", ".data_obj", function(event) {
+				data_obj_id = event.currentTarget.id;
+				// Delete if delete button was pressed
+				if (event.target.classList.contains("del")) {
+					del_textline(data_obj_id);
+					return;
+				}
+				load_topicdetail(data_obj_id);
+			});
+
+			// Load textlines
+			function load_textlines() {
+				xhr_add("GET", "get_textlines.php", function(x) {
+					document.getElementById("data").innerHTML = x.responseText;
+					document.getElementById("add_txt").focus();
+				});
+			}
+			function load_singletextline(id) {
+				xhr_add("GET", "get_singletextline.php?q=" + id, function(x) {
+					var before = x.responseText;
+					before += document.getElementById("data").innerHTML;
+					document.getElementById("data").innerHTML = before;
+					document.getElementById("add_txt").focus();
+				});
+			}
+
+			// Add textline
+			function add_textline() {
+				// Get value of textbox
+				val = $("#add_txt").val();
+				if (val == "") {
+					return;
+				}
+
+				// Run xmlhttprequest
+				xhr_add("POST", "add_textlines.php?q=" + val, function(x) {
+					id = x.responseText;
+					console.log("Created textline: " + x.response);
+
+					load_singletextline(id);
+				});
+
+				// Clear textbox
+				$("#add_txt").val("");
+			}
+
+			// Load topic details
+			function load_topicdetail(id) {
+				if (id == "") {
+					return;
+				}
+
+				// Run request
+				xhr_add("GET", "get_topic.php?q=" + id, function(x) {
+					console.log("Received topic: " + id);
+					document.getElementById("data").innerHTML = x.responseText;
+				});
+			}
+
+			// Delete textline
+			function del_textline(id) {
+				if (id == "") {
+					return;
+				}
+
+				// Run request
+				xhr_add("POST", "del_textlines.php?q=" + id, function(x) {
+					console.log("Deleted textline: " + id);
+				});
+
+				document.getElementById(id).remove();
+			}
+
+			var xhr_queue = [];
+			var xhr_active = false;
+
+			// Add to xhr queue
+			function xhr_add(method, url, cFunction) {
+				// Added
+				xhr_object = [method, url, cFunction];
+
+				xhr_queue.push(xhr_object);
+
+				// Call next if no has been added
+				if (!xhr_active) {
+					xhr_active = true;
+					xhr_callnext();
+				}
+			}
+
+			// Call next xhr in queue
+			function xhr_callnext() {
+				// Call next xhr
+				xhr_object = xhr_queue.shift();
+
+				xhr(xhr_object[0], xhr_object[1], xhr_object[2]);
+			}
+
+			function xhr(method, url, cFunction) {
+				var xhttp;
+				xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						// Call callback function
+						cFunction(this);
+
+						// Call next function if possible
+						if (xhr_queue.length == 0) {
+							xhr_active = false;
+						} else {
+							xhr_callnext();
+						}
+					}
+				};
+				xhttp.open(method, url, true);
+				xhttp.send();
+			}
+		</script>
+		<title>One</title>
+	</head>
+
+	<body>
+		<div id="web">
+			<div id="top">
+				<h2>RELOAD</h2>
+			</div>
+
+			<div id="center">
+				<div id="left">
+					<div id="add">
+						<p id="add_btn">+</p>
+
+						<input type="text" id="add_txt" autofocus />
+					</div>
+					<div id="data">
+						<div class="data_obj">
+							<p>
+								TEDS TEDS TEDS
+							</p>
+							<p>
+								Scientist and his students created a way to modify genes by
+								inserting a virus to cure genetical deceases. Scientist and his
+								students created a way to modify genes by inserting a virus to
+								cure genetical deceases. Scientist and his students created a
+								way to modify genes by inserting a virus to cure genetical
+								deceases. Scientist and his students created a way to modify
+								genes by inserting a virus to cure genetical deceases.
+							</p>
+						</div>
+						<div class="data_obj">
+							<p>
+								TED
+							</p>
+							<p>
+								Generations can't be seperated into stereotypes
+							</p>
+						</div>
+						<div class="data_obj">
+							<p>
+								PWR
+							</p>
+							<p>
+								Dont underestimate your enemy, destroy them completely
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div id="right">
+					<div id="userdetails">
+						<p>Notes</p>
+						<p id="notes_count">5</p>
+
+						<p>Days</p>
+						<p id="notes_count">3</p>
+
+						<p>Rand</p>
+						<p id="notes_count">100</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
